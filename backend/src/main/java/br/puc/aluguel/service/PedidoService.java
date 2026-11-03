@@ -46,7 +46,7 @@ public class PedidoService {
     }
 
     public List<Pedido> listarPendentes() {
-        return pedidoRepository.findByStatus(StatusPedido.EM_ANALISE);
+        return pedidoRepository.findByStatusIn(List.of(StatusPedido.INTRODUZIDO, StatusPedido.EM_ANALISE));
     }
 
     public Pedido buscarPorId(Long id) {
