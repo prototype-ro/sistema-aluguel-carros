@@ -1,0 +1,73 @@
+@startuml DiagramaClasses
+enum Role { CLIENTE \n AGENTE }
+enum TipoAgente { EMPRESA \n BANCO }
+enum TipoProprietario { CLIENTE \n EMPRESA \n BANCO }
+enum StatusPedido { INTRODUZIDO \n EM_ANALISE \n APROVADO \n REJEITADO \n EM_EXECUCAO \n CONCLUIDO \n CANCELADO }
+
+class Usuario {
+  Long id
+  String login
+  String senhaHash
+  Role role
+}
+
+class Cliente {
+  Long id
+  String rg
+  String cpf
+  String nome
+  String endereco
+  String profissao
+}
+
+class Empregador {
+  Long id
+  String nome
+  BigDecimal rendimento
+}
+
+class Agente {
+  Long id
+  TipoAgente tipo
+  String nome
+}
+
+class Automovel {
+  Long id
+  String matricula
+  Integer ano
+  String marca
+  String modelo
+  String placa
+  TipoProprietario tipoProprietario
+  Long proprietarioId
+}
+
+class Pedido {
+  Long id
+  LocalDate dataPedido
+  StatusPedido status
+}
+
+class Contrato {
+  Long id
+  LocalDate dataInicio
+  LocalDate dataFim
+  BigDecimal valor
+}
+
+class ContratoCredito {
+  Long id
+  BigDecimal valorFinanciado
+  Integer parcelas
+}
+
+Usuario "1" -- "0..1" Cliente
+Usuario "1" -- "0..1" Agente
+Cliente "1" -- "0..3" Empregador
+Cliente "1" -- "many" Pedido
+Automovel "1" -- "many" Pedido
+Pedido "1" -- "0..1" Contrato
+Contrato "1" -- "0..1" ContratoCredito
+Agente "1" -- "many" ContratoCredito : banco concede
+@enduml

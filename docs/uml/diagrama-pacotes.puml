@@ -1,0 +1,19 @@
+@startuml DiagramaPacotes
+package "br.puc.aluguel" {
+  package controller
+  package service
+  package repository
+  package model
+  package dto
+  package security
+  package config
+}
+controller --> service
+service --> repository
+service --> model
+service --> dto
+repository --> model
+controller --> dto
+controller --> security
+config --> security
+@enduml
