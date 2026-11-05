@@ -197,10 +197,7 @@ npm run dev
 │       └── routes/                # ProtectedRoute
 │
 ├── docs/
-│   ├── uml/                      # Diagramas PlantUML + user stories
-│   └── superpowers/
-│       ├── specs/                 # Spec de design do projeto
-│       └── plans/                 # Plano de implementação
+│   └── uml/                      # Diagramas PlantUML + user stories
 │
 └── README.md
 ```
@@ -245,7 +242,7 @@ cd backend
 
 | 👤 Nome | :octocat: GitHub |
 |---------|-----------------|
-| Rodrigo | — |
+| Rodrigo | https://github.com/prototype-ro |
 
 ---
 
