@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/client";
+import Layout from "../components/Layout";
 
 export default function Automoveis() {
   const [automoveis, setAutomoveis] = useState([]);
@@ -25,27 +26,60 @@ export default function Automoveis() {
   }
 
   return (
-    <div>
-      <h1>Automóveis</h1>
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Matrícula" value={form.matricula} onChange={update("matricula")} />
-        <input placeholder="Ano" type="number" value={form.ano} onChange={update("ano")} />
-        <input placeholder="Marca" value={form.marca} onChange={update("marca")} />
-        <input placeholder="Modelo" value={form.modelo} onChange={update("modelo")} />
-        <input placeholder="Placa" value={form.placa} onChange={update("placa")} />
-        <select value={form.tipoProprietario} onChange={update("tipoProprietario")}>
-          <option value="EMPRESA">Empresa</option>
-          <option value="BANCO">Banco</option>
-          <option value="CLIENTE">Cliente</option>
-        </select>
-        <input placeholder="ID do proprietário" type="number" value={form.proprietarioId} onChange={update("proprietarioId")} />
-        <button type="submit">Cadastrar</button>
+    <Layout>
+      <div className="page-header">
+        <h1>Automóveis</h1>
+      </div>
+
+      <form className="card" onSubmit={handleSubmit} style={{ marginBottom: 24 }}>
+        <h2>Cadastrar automóvel</h2>
+        <div className="form-grid" style={{ marginTop: 14 }}>
+          <div className="field">
+            <label htmlFor="matricula">Matrícula</label>
+            <input id="matricula" value={form.matricula} onChange={update("matricula")} />
+          </div>
+          <div className="field">
+            <label htmlFor="ano">Ano</label>
+            <input id="ano" type="number" value={form.ano} onChange={update("ano")} />
+          </div>
+          <div className="field">
+            <label htmlFor="marca">Marca</label>
+            <input id="marca" value={form.marca} onChange={update("marca")} />
+          </div>
+          <div className="field">
+            <label htmlFor="modelo">Modelo</label>
+            <input id="modelo" value={form.modelo} onChange={update("modelo")} />
+          </div>
+          <div className="field">
+            <label htmlFor="placa">Placa</label>
+            <input id="placa" value={form.placa} onChange={update("placa")} />
+          </div>
+          <div className="field">
+            <label htmlFor="tipoProprietario">Tipo de proprietário</label>
+            <select id="tipoProprietario" value={form.tipoProprietario} onChange={update("tipoProprietario")}>
+              <option value="EMPRESA">Empresa</option>
+              <option value="BANCO">Banco</option>
+              <option value="CLIENTE">Cliente</option>
+            </select>
+          </div>
+          <div className="field field-full">
+            <label htmlFor="proprietarioId">ID do proprietário</label>
+            <input id="proprietarioId" type="number" value={form.proprietarioId} onChange={update("proprietarioId")} />
+          </div>
+        </div>
+        <button className="btn btn-primary" type="submit">Cadastrar</button>
       </form>
-      <ul>
+
+      <div className="list">
         {automoveis.map((a) => (
-          <li key={a.id}>{a.marca} {a.modelo} ({a.ano}) — {a.placa}</li>
+          <div className="list-item" key={a.id}>
+            <div className="list-item-main">
+              <span className="list-item-title">{a.marca} {a.modelo} ({a.ano})</span>
+              <span className="list-item-sub">Placa {a.placa}</span>
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Layout>
   );
 }

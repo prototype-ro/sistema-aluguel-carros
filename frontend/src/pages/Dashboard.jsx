@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import api from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import Layout from "../components/Layout";
+import StatusBadge from "../components/StatusBadge";
 
 export default function Dashboard() {
-  const { role, logout } = useAuth();
+  const { role } = useAuth();
   const [pedidos, setPedidos] = useState([]);
 
   useEffect(() => {
@@ -23,30 +24,33 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
-      <h1>Pedidos</h1>
-      <nav>
-        {role === "CLIENTE" && <Link to="/perfil">Meu perfil</Link>}
-        {role === "CLIENTE" && <Link to="/pedidos/novo">Novo pedido</Link>}
-        {role === "AGENTE" && <Link to="/automoveis">Automóveis</Link>}
-        <button onClick={logout}>Sair</button>
-      </nav>
-      <ul>
+    <Layout>
+      <div className="page-header">
+        <h1>{role === "AGENTE" ? "Pedidos pendentes" : "Meus pedidos"}</h1>
+      </div>
+      {pedidos.length === 0 && <div className="card empty-state">Nenhum pedido por aqui.</div>}
+      <div className="list">
         {pedidos.map((p) => (
-          <li key={p.id}>
-            Pedido #{p.id} — automóvel {p.automovelId} — status {p.status}
-            {role === "AGENTE" && (
-              <>
-                <button onClick={() => avaliar(p.id, true)}>Aprovar</button>
-                <button onClick={() => avaliar(p.id, false)}>Rejeitar</button>
-              </>
-            )}
-            {role === "CLIENTE" && (p.status === "INTRODUZIDO" || p.status === "EM_ANALISE") && (
-              <button onClick={() => cancelar(p.id)}>Cancelar</button>
-            )}
-          </li>
+          <div className="list-item" key={p.id}>
+            <div className="list-item-main">
+              <span className="list-item-title">Pedido #{p.id}</span>
+              <span className="list-item-sub">Automóvel #{p.automovelId}</span>
+            </div>
+            <StatusBadge status={p.status} />
+            <div className="list-item-actions">
+              {role === "AGENTE" && (
+                <>
+                  <button className="btn btn-success btn-sm" onClick={() => avaliar(p.id, true)}>Aprovar</button>
+                  <button className="btn btn-danger btn-sm" onClick={() => avaliar(p.id, false)}>Rejeitar</button>
+                </>
+              )}
+              {role === "CLIENTE" && (p.status === "INTRODUZIDO" || p.status === "EM_ANALISE") && (
+                <button className="btn btn-danger btn-sm" onClick={() => cancelar(p.id)}>Cancelar</button>
+              )}
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </Layout>
   );
 }
