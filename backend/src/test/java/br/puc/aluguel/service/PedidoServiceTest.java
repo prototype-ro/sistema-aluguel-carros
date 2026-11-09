@@ -75,12 +75,30 @@ class PedidoServiceTest {
 
     @Test
     void cancelarPedidoJaAprovadoLancaExcecao() {
+        Cliente cliente = new Cliente();
+        cliente.setId(1L);
         Pedido pedido = new Pedido();
         pedido.setId(12L);
+        pedido.setCliente(cliente);
         pedido.setStatus(StatusPedido.APROVADO);
 
         when(pedidoRepository.findById(12L)).thenReturn(Optional.of(pedido));
 
-        assertThrows(IllegalStateException.class, () -> pedidoService.cancelar(12L));
+        assertThrows(IllegalStateException.class, () -> pedidoService.cancelar(1L, 12L));
+    }
+
+    @Test
+    void cancelarPedidoDeOutroClienteLancaAcessoNegado() {
+        Cliente dono = new Cliente();
+        dono.setId(1L);
+        Pedido pedido = new Pedido();
+        pedido.setId(13L);
+        pedido.setCliente(dono);
+        pedido.setStatus(StatusPedido.INTRODUZIDO);
+
+        when(pedidoRepository.findById(13L)).thenReturn(Optional.of(pedido));
+
+        assertThrows(br.puc.aluguel.exception.AcessoNegadoException.class,
+                () -> pedidoService.cancelar(2L, 13L));
     }
 }

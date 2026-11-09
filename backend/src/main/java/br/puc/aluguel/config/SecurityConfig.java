@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/pedidos/avaliar/**").hasRole("AGENTE")
+                .requestMatchers("/pedidos/pendentes").hasRole("AGENTE")
                 .requestMatchers(HttpMethod.GET, "/automoveis/**").authenticated()
                 .requestMatchers("/automoveis/**").hasRole("AGENTE")
                 .anyRequest().authenticated()

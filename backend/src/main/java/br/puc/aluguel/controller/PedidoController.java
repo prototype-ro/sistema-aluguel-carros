@@ -44,13 +44,19 @@ public class PedidoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PedidoResponse> modificar(@PathVariable Long id, @Valid @RequestBody PedidoRequest request) {
-        return ResponseEntity.ok(toResponse(pedidoService.modificarAutomovel(id, request)));
+    public ResponseEntity<PedidoResponse> modificar(
+            @AuthenticationPrincipal UsuarioDetails principal,
+            @PathVariable Long id, @Valid @RequestBody PedidoRequest request) {
+        var cliente = clienteService.buscarPorUsuarioId(principal.getUsuario().getId());
+        return ResponseEntity.ok(toResponse(pedidoService.modificarAutomovel(cliente.getId(), id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PedidoResponse> cancelar(@PathVariable Long id) {
-        return ResponseEntity.ok(toResponse(pedidoService.cancelar(id)));
+    public ResponseEntity<PedidoResponse> cancelar(
+            @AuthenticationPrincipal UsuarioDetails principal,
+            @PathVariable Long id) {
+        var cliente = clienteService.buscarPorUsuarioId(principal.getUsuario().getId());
+        return ResponseEntity.ok(toResponse(pedidoService.cancelar(cliente.getId(), id)));
     }
 
     @PutMapping("/avaliar/{id}")

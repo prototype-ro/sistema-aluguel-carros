@@ -2,6 +2,7 @@ package br.puc.aluguel.service;
 
 import br.puc.aluguel.dto.AvaliarPedidoRequest;
 import br.puc.aluguel.dto.PedidoRequest;
+import br.puc.aluguel.exception.AcessoNegadoException;
 import br.puc.aluguel.model.*;
 import br.puc.aluguel.repository.AutomovelRepository;
 import br.puc.aluguel.repository.ContratoRepository;
@@ -54,8 +55,9 @@ public class PedidoService {
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado"));
     }
 
-    public Pedido modificarAutomovel(Long id, PedidoRequest request) {
+    public Pedido modificarAutomovel(Long clienteId, Long id, PedidoRequest request) {
         Pedido pedido = buscarPorId(id);
+        verificarDono(clienteId, pedido);
         if (pedido.getStatus() != StatusPedido.INTRODUZIDO && pedido.getStatus() != StatusPedido.EM_ANALISE) {
             throw new IllegalStateException("Pedido não pode mais ser modificado");
         }
@@ -65,13 +67,20 @@ public class PedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public Pedido cancelar(Long id) {
+    public Pedido cancelar(Long clienteId, Long id) {
         Pedido pedido = buscarPorId(id);
+        verificarDono(clienteId, pedido);
         if (pedido.getStatus() != StatusPedido.INTRODUZIDO && pedido.getStatus() != StatusPedido.EM_ANALISE) {
             throw new IllegalStateException("Pedido não pode mais ser cancelado");
         }
         pedido.setStatus(StatusPedido.CANCELADO);
         return pedidoRepository.save(pedido);
+    }
+
+    private void verificarDono(Long clienteId, Pedido pedido) {
+        if (!pedido.getCliente().getId().equals(clienteId)) {
+            throw new AcessoNegadoException("Pedido não pertence a este cliente");
+        }
     }
 
     public Pedido avaliar(Long id, AvaliarPedidoRequest request) {
